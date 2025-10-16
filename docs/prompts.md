@@ -8,6 +8,10 @@ Please meticulously plan how best to create a comprehensive programming guide fi
 
 ---
 
+Please meticulously review the attached code samples for the Microsoft Agent Framework to deeply understand how various types of AI agents can be built using the framework. Then meticulously plan to create a comprehensive programming guide in markdown format to clearly explain how 5 different AI agent types can be constructed using the framework. Create a comprehensive programming guide that contains at least 5000 words with generous code snippets and descriptions to guide a developer new to the framework to be productive immediately. First, think deeply about the structure and content of your excellent guide, then meticulously create a detailed execution plan with integrated checklists for the guide. Review and validate the execution plan before proceeding cautiously. Please take this important documentation task seriously. Thank you.
+
+---
+
 I'll create a short todo plan and then open the GitHub page (via chrome-devtools-mcp) and fetch its content so I can inspect the `python` folder — outcome: gather repository context to inform the programming guide. I'll run two read-only tools in parallel: open the page and fetch its HTML content. 
 
 Created 5 todos
