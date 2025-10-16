@@ -2,26 +2,60 @@
 
 This folder contains a simple example that fetches unread emails via IMAP and summarizes them using OpenAI.
 
-Quick start
 
-1. Create a Python venv and install requirements:
+# Quick Start
 
-   python -m venv .venv
-   .venv\Scripts\Activate.ps1; pip install -r requirements.txt
+## 1. Create a Python venv and install requirements
 
-2. Set environment variables (PowerShell example):
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+# For agent-framework sample, install pre-release:
+pip install --pre agent-framework
+```
 
-   $env:EMAIL_HOST = "imap.gmail.com"
-   $env:EMAIL_USER = "you@example.com"
-   $env:EMAIL_PASSWORD = "app-password-or-token"
-   $env:OPENAI_API_KEY = "sk-..."
+## 2. Gmail OAuth setup
 
-3. Run:
+Place your `client_secrets.json` (from Google Cloud Console) in this folder.
+Run:
+```powershell
+python gmail_oauth.py
+```
+This will open a browser, ask for consent, and create `token.json`.
 
-   python agent.py
+## 3. Run the IMAP sample
 
-Notes
-- For Gmail, prefer OAuth and the Gmail API for production. This example uses IMAP for simplicity.
+Set environment variables (PowerShell):
+```powershell
+$env:EMAIL_HOST = "imap.gmail.com"
+$env:EMAIL_USER = "you@example.com"
+$env:EMAIL_PASSWORD = "app-password-or-token"
+$env:OPENAI_API_KEY = "sk-..."
+python agent.py
+```
+
+## 4. Run the Gmail API sample
+
+```powershell
+python gmail_fetcher.py
+```
+
+## 5. Run the agent-framework ChatAgent sample
+
+```powershell
+python agent_framework_agent.py
+```
+
+## Security notes
+- For Windows, restrict `token.json` to your user:
+```powershell
+$user = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+icacls .\token.json /inheritance:r
+icacls .\token.json /grant:r "$user:(R,W)"
+```
+- For production, use a secrets manager and OAuth web flow.
+
 
 Gmail API (OAuth) and agent-framework
 

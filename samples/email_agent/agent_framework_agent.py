@@ -7,11 +7,17 @@ async function `run_agent()` returns the result so tests can call it.
 import asyncio
 from typing import List, Dict, Any
 
+import sys
+import os
 try:
     from samples.email_agent.gmail_fetcher import get_unread_messages
-except Exception:
-    # Allow importing when running from the samples directory
-    from gmail_fetcher import get_unread_messages
+except ImportError:
+    # Add samples/email_agent to sys.path for direct/test runs
+    sample_dir = os.path.abspath(os.path.dirname(__file__))
+    if sample_dir not in sys.path:
+        sys.path.insert(0, sample_dir)
+    import gmail_fetcher
+    get_unread_messages = gmail_fetcher.get_unread_messages
 
 
 def sanitize_email_for_prompt(email_item: Dict[str, Any]) -> Dict[str, Any]:
@@ -59,33 +65,3 @@ def main():
     print(json.dumps(res, indent=2))
 
 
-if __name__ == "__main__":
-    main()
-"""Example: integrate Gmail fetcher with agent-framework ChatAgent as a tool."""
-import asyncio
-from typing import List, Dict
-
-from agent_framework import ChatAgent
-from agent_framework.openai import OpenAIChatClient
-
-from .gmail_fetcher import get_unread_messages
-
-
-def get_unread_emails_tool() -> List[Dict]:
-    """Tool function that returns unread emails. Matches agent-framework tool signature."""
-    return get_unread_messages(10)
-
-
-async def main():
-    agent = ChatAgent(
-        chat_client=OpenAIChatClient(),
-        instructions=("You are an assistant that summarizes unread email messages. Redact PII and return a TL;DR and brief per-email lines."),
-        tools=[get_unread_emails_tool],
-    )
-
-    resp = await agent.run("Summarize my unread emails")
-    print(resp)
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
