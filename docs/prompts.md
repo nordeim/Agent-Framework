@@ -28,6 +28,18 @@ awesome planning! Yes, please proceed meticulously according to your excellent p
 
 ---
 
+awesome job so far! yes, please meticulously run syntax checks on the modified code blocks and report PASS/FAIL. you can create the code files in the `guide_examples/` sub-folder first before running the test. you can also create the necessary test code files in the `guide_examples/` sub-folder. please meticulously plan before proceeding meticulously with this important verification task.
+
+Use the following "venv" to run your python commands:
+
+PS H:\project\agent-framework\python\samples\getting_started> H:\venv\Scripts\Activate.ps1
+(venv) PS H:\project\agent-framework\python\samples\getting_started> pip -V
+pip 25.2 from H:\venv\Lib\site-packages\pip (python 3.12)
+(venv) PS H:\project\agent-framework\python\samples\getting_started> pytest -V
+pytest 8.4.2
+
+---
+
 I'll create a short todo plan and then open the GitHub page (via chrome-devtools-mcp) and fetch its content so I can inspect the `python` folder — outcome: gather repository context to inform the programming guide. I'll run two read-only tools in parallel: open the page and fetch its HTML content. 
 
 Created 5 todos

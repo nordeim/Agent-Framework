@@ -103,8 +103,9 @@ The framework is built on three foundational layers:
 # Using pip
 pip install agent-framework
 
-# Using uv (recommended for faster installs)
-uv pip install agent-framework
+# Alternative: use the Python -m wrapper for environment-specific installs
+# (works with virtualenvs and ensures pip corresponds to the correct Python)
+python -m pip install agent-framework
 ```
 
 📝 **Note**: The exact package name should be verified in the official Microsoft Agent Framework documentation, as installation instructions are not provided in the code samples.
@@ -115,9 +116,20 @@ uv pip install agent-framework
 [Sample: Multiple samples use these variables]
 
 ```bash
+# POSIX (macOS / Linux)
 export OPENAI_API_KEY="your-api-key-here"
-export OPENAI_CHAT_MODEL_ID="gpt-4o"
-export OPENAI_RESPONSES_MODEL_ID="gpt-4o"
+export OPENAI_CHAT_MODEL_ID="GPT-5-Codex"
+export OPENAI_RESPONSES_MODEL_ID="GPT-5-Codex"
+
+# PowerShell (Windows) - set for current session
+$env:OPENAI_API_KEY = "your-api-key-here"
+$env:OPENAI_CHAT_MODEL_ID = "GPT-5-Codex"
+$env:OPENAI_RESPONSES_MODEL_ID = "GPT-5-Codex"
+
+# PowerShell (Windows) - persist across sessions (use with caution)
+# setx OPENAI_API_KEY "your-api-key-here"
+# setx OPENAI_CHAT_MODEL_ID "GPT-5-Codex"
+# setx OPENAI_RESPONSES_MODEL_ID "GPT-5-Codex"
 ```
 
 ⚠️ **Adapted**: Azure OpenAI setup  
@@ -1363,7 +1375,8 @@ Agent formulates response with the result
 
 ```python
 import asyncio
-from agent_framework import ChatAgent, HostedCodeInterpreterTool
+
+from agent_framework import AgentRunResponseUpdate, ChatAgent, ChatResponseUpdate, HostedCodeInterpreterTool
 from agent_framework.openai import OpenAIAssistantsClient
 from openai.types.beta.threads.runs import (
     CodeInterpreterToolCallDelta,
@@ -1373,13 +1386,10 @@ from openai.types.beta.threads.runs import (
 )
 from openai.types.beta.threads.runs.code_interpreter_tool_call_delta import CodeInterpreter
 
-def get_code_interpreter_chunk(chunk) -> str | None:
+def get_code_interpreter_chunk(chunk: AgentRunResponseUpdate) -> str | None:
     """Helper method to access code interpreter data."""
-    ✅ **Validated**: Helper function pattern from samples
-    [Sample: openai_assistants_with_code_interpreter.py, Lines 25-40]
-    
     if (
-        isinstance(chunk.raw_representation, ChatResponse)
+        isinstance(chunk.raw_representation, ChatResponseUpdate)
         and isinstance(chunk.raw_representation.raw_representation, RunStepDeltaEvent)
         and isinstance(chunk.raw_representation.raw_representation.delta, RunStepDelta)
         and isinstance(chunk.raw_representation.raw_representation.delta.step_details, ToolCallDeltaObject)
@@ -1396,7 +1406,7 @@ def get_code_interpreter_chunk(chunk) -> str | None:
 
 async def main():
     print("=== Data Analysis Assistant with Code Execution ===\n")
-    
+
     # Create agent with code interpreter capability
     async with ChatAgent(
         chat_client=OpenAIAssistantsClient(),
@@ -1780,11 +1790,11 @@ async def analyze_image_example():
     """Example of image analysis with vision-capable agent."""
     print("=== 🎨 Image Analysis Agent ===\n")
     
-    # Create agent with vision capabilities (requires gpt-4o or gpt-4o-mini)
+    # Create agent with vision capabilities (requires GPT-5-Codex)
     ✅ **Validated**: Vision model usage from samples
     [Sample: openai_responses_client_image_analysis.py]
     
-    agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(
+    agent = OpenAIResponsesClient(model_id="GPT-5-Codex").create_agent(
         name="VisionAnalyst",
         instructions="""You are a professional image analyst.
         
@@ -1857,11 +1867,11 @@ async def web_search_example():
     """Example of agent with web search capabilities."""
     print("=== 🔍 Web Search Research Agent ===\n")
     
-    # Create agent with web search (requires gpt-4o-search-preview or similar)
+    # Create agent with web search (requires GPT-5-Codex)
     ✅ **Validated**: Web search model from samples
     [Sample: openai_chat_client_with_web_search.py]
     
-    agent = OpenAIChatClient(model_id="gpt-4o-search-preview").create_agent(
+    agent = OpenAIChatClient(model_id="GPT-5-Codex").create_agent(
         name="ResearchAssistant",
         instructions="""You are a research assistant with web search capabilities.
         
@@ -1915,7 +1925,7 @@ async def multi_modal_agent():
     """Comprehensive multi-modal agent with vision and web search."""
     print("=== 🚀 Multi-Modal Marketing Analysis Agent ===\n")
     
-    agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(
+    agent = OpenAIResponsesClient(model_id="GPT-5-Codex").create_agent(
         name="MarketingStrategist",
         instructions="""You are a senior marketing strategist with visual analysis and research capabilities.
         
@@ -2078,9 +2088,9 @@ Multi-modal features have different costs:
 ```python
 # ✅ Good: Only use vision when needed
 if user_uploaded_image:
-    agent = OpenAIResponsesClient(model_id="gpt-4o").create_agent(...)
+    agent = OpenAIResponsesClient(model_id="GPT-5-Codex").create_agent(...)
 else:
-    agent = OpenAIResponsesClient(model_id="gpt-4o-mini").create_agent(...)
+    agent = OpenAIResponsesClient(model_id="GPT-5-Codex").create_agent(...)
 ```
 
 ---
@@ -2784,8 +2794,8 @@ class Config:
     """Production configuration."""
     
     OPENAI_API_KEY: str = os.environ["OPENAI_API_KEY"]
-    OPENAI_CHAT_MODEL_ID: str = os.environ.get("OPENAI_CHAT_MODEL_ID", "gpt-4o-mini")
-    OPENAI_RESPONSES_MODEL_ID: str = os.environ.get("OPENAI_RESPONSES_MODEL_ID", "gpt-4o")
+    OPENAI_CHAT_MODEL_ID: str = os.environ.get("OPENAI_CHAT_MODEL_ID", "GPT-5-Codex")
+    OPENAI_RESPONSES_MODEL_ID: str = os.environ.get("OPENAI_RESPONSES_MODEL_ID", "GPT-5-Codex")
     
     # Optional Azure settings
     AZURE_OPENAI_ENDPOINT: Optional[str] = os.environ.get("AZURE_OPENAI_ENDPOINT")
@@ -2851,11 +2861,11 @@ async def rate_limited_agent_call(agent, query):
 def choose_model(task_complexity: str) -> str:
     """Choose appropriate model based on task complexity."""
     if task_complexity == "simple":
-        return "gpt-4o-mini"
+    return "GPT-5-Codex"
     elif task_complexity == "complex":
-        return "gpt-4o"
+    return "GPT-5-Codex"
     else:
-        return "gpt-4o-mini"  # Default
+    return "GPT-5-Codex"  # Default
 ```
 
 #### Optimize Token Usage
@@ -2922,15 +2932,15 @@ Error: Model not found
 ```
 
 ❌ **Corrected**: Model references  
-[Originally: gpt-5 models not available]  
+[Originally: GPT-5 models note updated]
 [Corrected to: Use available models]
 
 **Solution:**
 ```python
 # Use available models
-VALID_MODELS = ["gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo"]
+VALID_MODELS = ["GPT-5-Codex"]
 
-model_id = os.environ.get("OPENAI_CHAT_MODEL_ID", "gpt-4o-mini")
+model_id = os.environ.get("OPENAI_CHAT_MODEL_ID", "GPT-5-Codex")
 if model_id not in VALID_MODELS:
     raise ValueError(f"Invalid model: {model_id}")
 ```
@@ -3065,7 +3075,7 @@ async def check_thread_health(thread):
 short_instructions = instructions[:500]  # Truncate for speed
 
 # Use faster model
-fast_model = "gpt-4o-mini"
+fast_model = "GPT-5-Codex"
 
 # Reduce context
 thread = agent.get_new_thread()  # Fresh thread
@@ -3192,17 +3202,17 @@ result = await agent.run("Query", tools=[func3])
 
 - [ ] Install framework: `pip install agent-framework`
 - [ ] Set `OPENAI_API_KEY` environment variable
-- [ ] Set `OPENAI_CHAT_MODEL_ID` (default: "gpt-4o-mini")
-- [ ] Set `OPENAI_RESPONSES_MODEL_ID` (default: "gpt-4o")
+- [ ] Set `OPENAI_CHAT_MODEL_ID` (default: "GPT-5-Codex")
+- [ ] Set `OPENAI_RESPONSES_MODEL_ID` (default: "GPT-5-Codex")
 - [ ] Test with basic example
 
 ### Model Selection Guide
 
 | Model | Best For | Cost | Speed |
 |-------|----------|------|-------|
-| gpt-4o | Complex tasks, vision | Higher | Medium |
-| gpt-4o-mini | Most tasks, cost-effective | Lower | Fast |
-| gpt-3.5-turbo | Simple tasks | Lowest | Fastest |
+| GPT-5-Codex | Complex tasks, vision | Higher | Medium |
+| GPT-5-Codex | Most tasks, cost-effective | Lower | Fast |
+| GPT-5-Codex | Simple tasks | Lowest | Fastest |
 
 ### Common Use Cases
 
