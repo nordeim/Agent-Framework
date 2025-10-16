@@ -12,6 +12,22 @@ Please meticulously review the attached code samples for the Microsoft Agent Fra
 
 ---
 
+You have done an excellent job in producing an awesome guide! Please keep up the good work. Now, please meticulously review the contributed guide below and do a deep dive comparison with your guide. Based on a deep analysis and comparison of my guide below, give me your comprehensive assessment of the contributed guide. Please meticulously plan how you will approach this very important task before you begin. Remember to cross-check any doubts or conflicts with the original Microsoft sample codes shared earlier; do not assume the actual Microsoft Agent Framework.
+
+---
+
+You have done yet another impressive work with your meticulous review and comparison of the contributed guide. Please help to meticulously validate the content and examples in the contributed guide with the original Microsoft sample codes shared earlier, then plan how to help me correct inaccurate assumptions in the contributed guide and plan how best to create a validated version of the contributed guide. Review and validate your plan to create a validated version of the contributed guide. Please think deeply about how you will approach this very important assignment.
+
+---
+
+You have done yet another impressive work with your meticulous review and comparison of the contributed guide. Please help to meticulously validate the content and examples in your generated guide with the original Microsoft sample codes shared earlier, then plan how to correct inaccurate assumptions in your generated guide and plan how best to create a validated version of your generated guide with enhancements. Review and validate your plan to create a validated and enhanced version of your generated guide. Please think deeply about how you will approach this very important assignment.
+
+---
+
+awesome planning! Yes, please proceed meticulously according to your excellent plan.
+
+---
+
 I'll create a short todo plan and then open the GitHub page (via chrome-devtools-mcp) and fetch its content so I can inspect the `python` folder — outcome: gather repository context to inform the programming guide. I'll run two read-only tools in parallel: open the page and fetch its HTML content. 
 
 Created 5 todos
