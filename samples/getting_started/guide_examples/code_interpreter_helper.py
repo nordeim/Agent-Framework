@@ -4,29 +4,45 @@ from openai.types.beta.threads.runs import (
     RunStepDeltaEvent,
     ToolCallDeltaObject,
 )
-from openai.types.beta.threads.runs.code_interpreter_tool_call_delta import CodeInterpreter
+from openai.types.beta.threads.runs.code_interpreter_tool_call_delta import (
+    CodeInterpreter,
+)
 
-# Minimal stub classes to allow local import and syntax checking without full SDK
+
 class AgentRunResponseUpdate:
+    """Stub for SDK response update used for local syntax checks."""
     pass
 
+
 class ChatResponseUpdate:
+    """Stub for SDK chat response used for local syntax checks."""
     pass
 
 
 def get_code_interpreter_chunk(chunk: AgentRunResponseUpdate) -> str | None:
-    """Helper method to access code interpreter data."""
-    # The real implementation expects chunk to have nested attributes matching the SDK types.
-    # Here we implement a defensive check pattern similar to the sample for syntax validation.
+    """Helper method to access code interpreter input from nested SDK objects.
+
+    This function is defensive: it checks for the expected nested attributes
+    and returns the `input` string when a CodeInterpreter tool call is found.
+    If the structure is missing or any attribute is not present, it returns
+    None. The implementation is intentionally lightweight so tests and
+    static checks do not need the full OpenAI SDK available.
+    """
     try:
+        raw = getattr(chunk, "raw_representation", None)
         if (
-            isinstance(chunk.raw_representation, ChatResponseUpdate)
-            and isinstance(chunk.raw_representation.raw_representation, RunStepDeltaEvent)
-            and isinstance(chunk.raw_representation.raw_representation.delta, RunStepDelta)
-            and isinstance(chunk.raw_representation.raw_representation.delta.step_details, ToolCallDeltaObject)
-            and chunk.raw_representation.raw_representation.delta.step_details.tool_calls
+            isinstance(raw, ChatResponseUpdate)
+            and isinstance(raw.raw_representation, RunStepDeltaEvent)
+            and isinstance(raw.raw_representation.delta, RunStepDelta)
+            and isinstance(
+                raw.raw_representation.delta.step_details, ToolCallDeltaObject
+            )
+            and raw.raw_representation.delta.step_details.tool_calls
         ):
-            for tool_call in chunk.raw_representation.raw_representation.delta.step_details.tool_calls:
+            tool_calls = (
+                raw.raw_representation.delta.step_details.tool_calls
+            )
+            for tool_call in tool_calls:
                 if (
                     isinstance(tool_call, CodeInterpreterToolCallDelta)
                     and isinstance(tool_call.code_interpreter, CodeInterpreter)
@@ -34,6 +50,8 @@ def get_code_interpreter_chunk(chunk: AgentRunResponseUpdate) -> str | None:
                 ):
                     return tool_call.code_interpreter.input
     except Exception:
-        # Defensive: if structure is missing, return None
+    except Exception:
+        # If structure differs or is missing, return None.
+        return None
         return None
     return None
