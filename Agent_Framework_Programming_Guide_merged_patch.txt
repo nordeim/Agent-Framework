@@ -1,0 +1,7 @@
+*** Begin Patch
+*** Add File: Agent_Framework_Programming_Guide_merged.md
+This patch creates a merged edition that incorporates Edition 2's model validation
+and troubleshooting improvements into Edition 1's structure. It also marks model
+IDs in examples as illustrative only to avoid accidental copy-paste of non-existing
+model identifiers.
+*** End Patch
