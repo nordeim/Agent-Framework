@@ -35,7 +35,8 @@ def get_code_interpreter_chunk(chunk: AgentRunResponseUpdate) -> str | None:
             and isinstance(raw.raw_representation, RunStepDeltaEvent)
             and isinstance(raw.raw_representation.delta, RunStepDelta)
             and isinstance(
-                raw.raw_representation.delta.step_details, ToolCallDeltaObject
+                raw.raw_representation.delta.step_details,
+                ToolCallDeltaObject,
             )
             and raw.raw_representation.delta.step_details.tool_calls
         ):
@@ -50,8 +51,6 @@ def get_code_interpreter_chunk(chunk: AgentRunResponseUpdate) -> str | None:
                 ):
                     return tool_call.code_interpreter.input
     except Exception:
-    except Exception:
         # If structure differs or is missing, return None.
-        return None
         return None
     return None
