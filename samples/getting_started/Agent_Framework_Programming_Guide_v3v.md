@@ -1617,26 +1617,13 @@ async def run_with_code_monitoring(agent, query):
 To extract the actual code that was generated:
 
 ```python
-def get_code_interpreter_chunk(chunk) -> str | None:
-    """Extract generated Python code from agent response."""
-    ✅ **Validated**: Helper function from samples
-    [Sample: openai_assistants_with_code_interpreter.py, Lines 25-40]
-    
-    if (
-        isinstance(chunk.raw_representation, ChatResponse)
-        and isinstance(chunk.raw_representation.raw_representation, RunStepDeltaEvent)
-        and isinstance(chunk.raw_representation.raw_representation.delta, RunStepDelta)
-        and isinstance(chunk.raw_representation.raw_representation.delta.step_details, ToolCallDeltaObject)
-        and chunk.raw_representation.raw_representation.delta.step_details.tool_calls
-    ):
-        for tool_call in chunk.raw_representation.raw_representation.delta.step_details.tool_calls:
-            if (
-                isinstance(tool_call, CodeInterpreterToolCallDelta)
-                and isinstance(tool_call.code_interpreter, CodeInterpreter)
-                and tool_call.code_interpreter.input is not None
-            ):
-                return tool_call.code_interpreter.input
-    return None
+# Usage (the canonical helper is defined earlier in this guide)
+```python
+async for chunk in agent.run_stream("Calculate factorial of 50"):
+    code = get_code_interpreter_chunk(chunk)
+    if code:
+        print(f"Generated Code:\n{code}")
+```
 
 # Usage
 async for chunk in agent.run_stream("Calculate factorial of 50"):
