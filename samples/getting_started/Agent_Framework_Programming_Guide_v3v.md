@@ -128,8 +128,8 @@ $env:OPENAI_RESPONSES_MODEL_ID = "GPT-5-Codex"
 
 # PowerShell (Windows) - persist across sessions (use with caution)
 # setx OPENAI_API_KEY "your-api-key-here"
-# setx OPENAI_CHAT_MODEL_ID "GPT-5-Codex"
-# setx OPENAI_RESPONSES_MODEL_ID "GPT-5-Codex"
+# setx OPENAI_CHAT_MODEL_ID "gpt-4o"
+# setx OPENAI_RESPONSES_MODEL_ID "gpt-4o"
 ```
 
 ⚠️ **Adapted**: Azure OpenAI setup  
@@ -1790,7 +1790,7 @@ async def analyze_image_example():
     """Example of image analysis with vision-capable agent."""
     print("=== 🎨 Image Analysis Agent ===\n")
     
-    # Create agent with vision capabilities (requires GPT-5-Codex)
+    # Create agent with vision capabilities (requires gpt-4o or gpt-4o-mini)
     ✅ **Validated**: Vision model usage from samples
     [Sample: openai_responses_client_image_analysis.py]
     
@@ -1867,7 +1867,7 @@ async def web_search_example():
     """Example of agent with web search capabilities."""
     print("=== 🔍 Web Search Research Agent ===\n")
     
-    # Create agent with web search (requires GPT-5-Codex)
+    # Create agent with web search (requires gpt-4o-search-preview or similar)
     ✅ **Validated**: Web search model from samples
     [Sample: openai_chat_client_with_web_search.py]
     
