@@ -1,0 +1,11 @@
+# Core dependencies
+aiohttp>=3.8.5
+python-dotenv>=1.0.0
+
+# Agent Framework (as used in the programming guide)
+# The package name in the guide is 'agent-framework' (installable name may vary).
+# If the package name differs in your environment, adjust accordingly.
+agent-framework>=0.1.0
+
+# Optional: OpenAI client if your agent uses OpenAIChatClient
+openai>=0.27.0
